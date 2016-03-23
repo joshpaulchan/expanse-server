@@ -1,0 +1,102 @@
+@import url(https://fonts.googleapis.com/css?family=Roboto:400,700,500,900);
+
+html, body {
+  font-family: Roboto, Arial, sans-serif;
+  margin: 0;
+}
+
+.window {
+  display: inline-block;
+  margin: 3em;
+/*   outline: 1px solid black; */
+  background: #fff;
+}
+
+.window:before, .window:after {
+  display: block;
+  content: "";
+  height: 2em;
+  line-height: 2em;
+  width: 100%;
+  background: #ccc;
+}
+
+.window:before {
+  text-align: center;
+  content: attr(window-title);
+}
+
+.no-footer:after {
+  display: none;
+}
+
+.window-content {
+  padding: 2em;
+  resize: both;
+}
+
+.button-group {
+  margin: 1em 0;
+}
+
+.btn {
+  box-sizing: border-box;
+  margin-right: 1em;
+  margin-bottom: 1em;
+  font: inherit;
+  background: none;
+  border: 0;
+  border: 2px solid black;
+}
+
+.info {
+  color: #777;
+}
+
+/* WINDOWS WINDOW */
+
+.window-list {
+  outline: 1px solid black;
+  width: 300px;
+  height: 100px;
+  overflow: auto;
+}
+
+.window-list td {
+  vertical-align: baseline;
+}
+
+.window-list thead {
+  outline: 1px solid black;
+  text-align: left;
+}
+
+.window-list thead td {
+  border-right: 1px solid black;
+}
+
+.window-list tr *:nth-child(1) {
+  text-align: center;
+  width: 10%;
+}
+
+.window-list input[type="checkbox"] {
+  width: 100%;
+}
+
+/* OPTIONS WINDOW */
+
+/* GESTURES WINDOW */
+
+.gesture-enable, .gesture-recalibrate {
+  border-bottom: 2px solid #eee;
+  margin-bottom: 1em;
+}
+
+.gesture-enable {
+  
+}
+
+.gesture-recalibrate {
+  
+}
