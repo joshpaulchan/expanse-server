@@ -1,3 +1,4 @@
+'esversion: 6';
 'use strict';
 
 const electron = require('electron');
@@ -12,12 +13,27 @@ const Menu = electron.Menu;
 // be closed automatically when the JavaScript object is garbage collected.
 let trayIcon;
 let trayMenu;
-let mainWindow;
-let selectWindow = null;
-var windows = [];
-const windowOptions = {
+
+var windows = {
+    0: {
+        obj: null,
+        template: 'file://' + __dirname + '/templates/window.html'
+    },
+    1: {
+        obj: null,
+        template: 'file://' + __dirname + '/templates/gestures.html'
+    },
+    2: {
+        obj: null,
+        template: 'file://' + __dirname + '/templates/options.html'
+    }
+};
+
+var winOpts = {
     "useContentSize": true,
-    "skipTaskbar": true
+    "skipTaskbar": true,
+    "width": 480,
+    "height": 320
 };
 
 var initialize = function() {
@@ -69,56 +85,36 @@ var initialize = function() {
     trayIcon.setToolTip("Status: ONLINE");
     trayIcon.setContextMenu(trayMenu);
     
-    app.dock.hide();
+    if (process.platform == 'darwin') {
+        app.dock.hide();
+    }
     
+    // Notification.requestPermission();
+    // var n = new Notification('Expanse', {
+    //     body: 'Expanse is ready.'
+    // });
 };
 
 var showWindow = function(id) {
-    switch (id) {
-        case 0:
-            if (selectWindow == null) {
-                selectWindow = new BrowserWindow();
-                selectWindow.loadUrl('file://' + __dirname + '/templates/window.html');
-                selectWindow.on('closed', function() {
-                    // Dereference the window object, usually you would store windows
-                    // in an array if your app supports multi windows, this is the time
-                    // when you should delete the corresponding element.
-                    selectWindow = null;
-                });
-            } else {
-                selectWindow.focus();
-            }
-            break;
-        default:
-            console.log("MenuItem '" + id + "' not supported.");
-            break;
+    // if id is not supported, exit
+    if (!(id in Object.keys(windows))) {
+        // console.log("Menu item '" + id + "' not supported.");
+        return;
+    }
+    
+    var win = windows[id];
+    if (typeof win.obj === 'undefined' || win.obj === null) {
+        win = new BrowserWindow(winOpts);
+        win.loadURL(windows[id].template);
+        win.on('closed', function() {
+            windows[id].obj = null;
+        });
+        windows[id].obj = win;
+        // console.log(windows);
+    } else {
+        win.obj.focus();
     }
 };
-
-function createWindow() {
-    // Create the browser window.
-    mainWindow = new BrowserWindow({
-        width: 800,
-        height: 600
-    });
-    // selectWindow = new BrowserWindow();
-    
-    // and load the index.html of the app.
-    mainWindow.loadURL('file://' + __dirname + '/index.html');
-    // selectWindow.loadUrl('file://' + __dirname + '/templates/window.html');
-
-    // Open the DevTools.
-    mainWindow.webContents.openDevTools();
-    // selectWindow.webContents.openDevTools();
-
-    // Emitted when the window is closed.
-    mainWindow.on('closed', function() {
-        // Dereference the window object, usually you would store windows
-        // in an array if your app supports multi windows, this is the time
-        // when you should delete the corresponding element.
-        mainWindow = null;
-    });
-}
 
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
